@@ -1,16 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/portal", label: "Portal" },
-  { href: "/handbook", label: "Handbook" },
-];
+import { useEffect, useState } from "react";
+import { getNavigationItems, type NavigationItem } from "@/lib/database";
 
 export function Header() {
   const pathname = usePathname();
+  const [navItems, setNavItems] = useState<NavigationItem[]>([]);
+
+  useEffect(() => {
+    async function loadNavItems() {
+      const items = await getNavigationItems();
+      setNavItems(items);
+    }
+    loadNavItems();
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-6 border-b border-zinc-200 bg-white/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/95 dark:supports-[backdrop-filter]:bg-zinc-950/80">
@@ -18,8 +24,14 @@ export function Header() {
         href="/"
         className="flex items-center gap-2 font-semibold text-zinc-900 dark:text-zinc-50"
       >
-        <span className="text-lg">FH</span>
-        <span className="hidden sm:inline">Freedom House Portal</span>
+        <Image
+          src="/Logo.jpg"
+          alt="Freedom House"
+          width={32}
+          height={32}
+          className="rounded-full object-contain"
+        />
+        <span>Portal</span>
       </Link>
       <nav className="flex flex-1 items-center gap-1">
         {navItems.map((item) => {

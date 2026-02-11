@@ -1,9 +1,16 @@
 import Link from "next/link";
 import { PortalLayout } from "@/components/PortalLayout";
 import { SidebarAll } from "@/components/Sidebar";
-import { categories } from "@/lib/content";
+import { getAllCategories, getNavigationItems } from "@/lib/database";
 
-export default function Home() {
+export default async function Home() {
+  const [categories, navItems] = await Promise.all([
+    getAllCategories(),
+    getNavigationItems(),
+  ]);
+
+  const sectionNavItems = navItems.filter((item) => item.href !== "/");
+
   return (
     <PortalLayout sidebar={<SidebarAll />}>
       <div className="mx-auto max-w-3xl px-6 py-10">
@@ -20,22 +27,16 @@ export default function Home() {
               Browse
             </h2>
             <ul className="mt-3 flex flex-wrap gap-2">
-              <li>
-                <Link
-                  href="/portal"
-                  className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
-                >
-                  Portal
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/handbook"
-                  className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
-                >
-                  Handbook
-                </Link>
-              </li>
+              {sectionNavItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </section>
 
@@ -50,7 +51,7 @@ export default function Home() {
                     {cat.title}
                   </span>
                   <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {cat.articles.map((a) => (
+                    {cat.articles?.map((a) => (
                       <li key={a.slug}>
                         <Link
                           href={`/${a.section}/${a.slug}`}
