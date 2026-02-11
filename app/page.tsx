@@ -52,10 +52,10 @@ export default async function Home() {
                   </span>
                   {(cat.sections || []).map((section) => (
                     <div key={section.id} className="mt-2">
-                      <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
                         {section.title}
                       </span>
-                      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                      <ul className="mt-0.5 flex flex-wrap gap-x-4 gap-y-[1px] text-sm text-zinc-600 dark:text-zinc-400">
                         {(section.articles || []).map((a) => (
                           <li key={a.slug}>
                             <Link

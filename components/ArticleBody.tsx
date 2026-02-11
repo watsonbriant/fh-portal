@@ -76,7 +76,17 @@ export function ArticleBody({ content }: ArticleBodyProps) {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (line.startsWith("## ")) {
+    if (line.startsWith("### ")) {
+      flushList();
+      nodes.push(
+        <h3
+          key={nodes.length}
+          className="mt-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+        >
+          {line.slice(4)}
+        </h3>
+      );
+    } else if (line.startsWith("## ")) {
       flushList();
       nodes.push(
         <h2

@@ -125,7 +125,7 @@ export function Sidebar({ categorySection }: SidebarProps) {
                             <li key={article.slug}>
                               <Link
                                 href={href}
-                                className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
+                                className={`block rounded-md px-2 py-1 text-sm leading-[0.875rem] transition-colors ${
                                   isActive
                                     ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
                                     : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
@@ -221,7 +221,7 @@ export function SidebarAll() {
                             <li key={article.slug}>
                               <Link
                                 href={href}
-                                className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
+                                className={`block rounded-md px-2 py-0.5 text-sm transition-colors ${
                                   isActive
                                     ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
                                     : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
