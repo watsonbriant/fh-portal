@@ -87,8 +87,8 @@ export function Sidebar({ categorySection }: SidebarProps) {
   };
 
   return (
-    <aside className="w-64 shrink-0 border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
-      <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto py-4 pl-4 pr-2">
+    <aside className="flex w-64 shrink-0 flex-col overflow-hidden border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
+      <div className="min-h-0 flex-1 overflow-y-auto py-4 pl-4 pr-2">
         <DailyBibleVerse />
         <nav className="space-y-4">
           {categories.map((category, index) => (
@@ -103,11 +103,11 @@ export function Sidebar({ categorySection }: SidebarProps) {
                 const sectionKey = getSectionKey(category.section, section.id);
                 const isExpanded = expandedSections.has(sectionKey);
                 return (
-                  <div key={section.id} className="mb-3">
+                  <div key={section.id} className="mb-1">
                     <button
                       type="button"
                       onClick={() => toggleSection(sectionKey)}
-                      className="mb-1.5 flex w-full items-center gap-1.5 rounded-full bg-zinc-200 px-2.5 py-0.5 text-left text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                      className="mb-0.5 flex w-full items-center gap-1.5 rounded-full bg-zinc-200 px-2.5 py-0.5 text-left text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
                     >
                       <span
                         className={`shrink-0 transition-transform ${isExpanded ? "rotate-90" : ""}`}
@@ -116,28 +116,34 @@ export function Sidebar({ categorySection }: SidebarProps) {
                       </span>
                       {section.title}
                     </button>
-                    {isExpanded && (
-                      <ul className="space-y-0.5">
-                        {(section.articles || []).map((article) => {
-                          const href = getHref(category.section, section.id, article.slug);
-                          const isActive = pathname === href;
-                          return (
-                            <li key={article.slug}>
-                              <Link
-                                href={href}
-                                className={`block rounded-md px-2 py-1 text-sm leading-[0.875rem] transition-colors ${
-                                  isActive
-                                    ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
-                                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-                                }`}
-                              >
-                                {article.title}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
+                    <div
+                      className={`grid transition-[grid-template-rows] duration-200 ease-in-out ${
+                        isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <ul className="space-y-0.5 pt-1">
+                          {(section.articles || []).map((article) => {
+                            const href = getHref(category.section, section.id, article.slug);
+                            const isActive = pathname === href;
+                            return (
+                              <li key={article.slug}>
+                                <Link
+                                  href={href}
+                                  className={`block rounded-md px-2 py-1 text-sm leading-[0.875rem] transition-colors ${
+                                    isActive
+                                      ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
+                                      : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                                  }`}
+                                >
+                                  {article.title}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
@@ -183,8 +189,8 @@ export function SidebarAll() {
   };
 
   return (
-    <aside className="w-64 shrink-0 border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
-      <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto py-4 pl-4 pr-2">
+    <aside className="flex w-64 shrink-0 flex-col overflow-hidden border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
+      <div className="min-h-0 flex-1 overflow-y-auto py-4 pl-4 pr-2">
         <DailyBibleVerse />
         <nav className="space-y-4">
           {categories.map((category, index) => (
@@ -199,7 +205,7 @@ export function SidebarAll() {
                 const sectionKey = getSectionKey(category.section, section.id);
                 const isExpanded = expandedSections.has(sectionKey);
                 return (
-                  <div key={section.id} className="mb-3">
+                  <div key={section.id} className="mb-1">
                     <button
                       type="button"
                       onClick={() => toggleSection(sectionKey)}
@@ -212,28 +218,34 @@ export function SidebarAll() {
                       </span>
                       {section.title}
                     </button>
-                    {isExpanded && (
-                      <ul className="space-y-0.5">
-                        {(section.articles || []).map((article) => {
-                          const href = getHref(category.section, section.id, article.slug);
-                          const isActive = pathname === href;
-                          return (
-                            <li key={article.slug}>
-                              <Link
-                                href={href}
-                                className={`block rounded-md px-2 py-0.5 text-sm transition-colors ${
-                                  isActive
-                                    ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
-                                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-                                }`}
-                              >
-                                {article.title}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
+                    <div
+                      className={`grid transition-[grid-template-rows] duration-200 ease-in-out ${
+                        isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <ul className="space-y-0.5 pt-1">
+                          {(section.articles || []).map((article) => {
+                            const href = getHref(category.section, section.id, article.slug);
+                            const isActive = pathname === href;
+                            return (
+                              <li key={article.slug}>
+                                <Link
+                                  href={href}
+                                  className={`block rounded-md px-2 py-0.5 text-sm transition-colors ${
+                                    isActive
+                                      ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
+                                      : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                                  }`}
+                                >
+                                  {article.title}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
