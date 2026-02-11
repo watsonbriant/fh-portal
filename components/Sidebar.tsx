@@ -33,7 +33,7 @@ function DailyBibleVerse() {
         src="/daily-verse.html"
         title="Daily Bible Verse"
         className="w-full border-0"
-        style={{ height: iframeHeight ?? 80 }}
+        style={{ height: iframeHeight !== null ? iframeHeight + 2 : 80 }}
         sandbox="allow-scripts allow-same-origin"
       />
     </div>
