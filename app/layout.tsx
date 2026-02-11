@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Freedom House Portal",
   description:
     "Reference guide for staff and contractors at Freedom House Church — help articles, links, and documents.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

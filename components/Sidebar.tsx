@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getAllCategories, getCategoriesForSection, type Category, type NavSection } from "@/lib/database";
 
 function getHref(section: NavSection, slug: string) {
@@ -10,12 +10,30 @@ function getHref(section: NavSection, slug: string) {
 }
 
 function DailyBibleVerse() {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [iframeHeight, setIframeHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    function handleMessage(event: MessageEvent) {
+      if (event.data?.type === "dailyVerseResize" && typeof event.data.height === "number") {
+        setIframeHeight(event.data.height);
+      }
+    }
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
   return (
     <div className="mb-4 overflow-hidden rounded-md border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
+      <p className="border-b border-zinc-200 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+        Verse of the Day
+      </p>
       <iframe
+        ref={iframeRef}
         src="/daily-verse.html"
         title="Daily Bible Verse"
-        className="h-[200px] w-full border-0"
+        className="w-full border-0"
+        style={{ height: iframeHeight ?? 80 }}
         sandbox="allow-scripts allow-same-origin"
       />
     </div>
