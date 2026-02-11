@@ -9,6 +9,15 @@ function getHref(categorySection: string, sectionId: string, slug: string) {
   return `/${categorySection}/${sectionId}/${slug}`;
 }
 
+function getSectionKey(categorySection: string, sectionId: string): string {
+  return `${categorySection}:${sectionId}`;
+}
+
+function getCurrentSectionFromPath(pathname: string): string | null {
+  const parts = pathname.split("/").filter(Boolean);
+  return parts.length >= 3 ? getSectionKey(parts[0], parts[1]) : null;
+}
+
 function DailyBibleVerse() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeHeight, setIframeHeight] = useState<number | null>(null);
@@ -47,6 +56,10 @@ interface SidebarProps {
 export function Sidebar({ categorySection }: SidebarProps) {
   const pathname = usePathname();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(() => {
+    const current = getCurrentSectionFromPath(pathname);
+    return current ? new Set([current]) : new Set();
+  });
 
   useEffect(() => {
     async function loadCategories() {
@@ -56,43 +69,78 @@ export function Sidebar({ categorySection }: SidebarProps) {
     loadCategories();
   }, [categorySection]);
 
+  useEffect(() => {
+    const current = getCurrentSectionFromPath(pathname);
+    setExpandedSections(current ? new Set([current]) : new Set());
+  }, [pathname]);
+
+  const toggleSection = (key: string) => {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
   return (
     <aside className="w-64 shrink-0 border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
       <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto py-4 pl-4 pr-2">
         <DailyBibleVerse />
         <nav className="space-y-4">
-          {categories.map((category) => (
-            <div key={category.id}>
+          {categories.map((category, index) => (
+            <div
+              key={category.id}
+              className={index > 0 ? "border-t border-zinc-200 pt-4 dark:border-zinc-700" : ""}
+            >
               <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 {category.title}
               </p>
-              {(category.sections || []).map((section) => (
-                <div key={section.id} className="mb-3">
-                  <p className="mb-1 px-2 text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                    {section.title}
-                  </p>
-                  <ul className="space-y-0.5">
-                    {(section.articles || []).map((article) => {
-                      const href = getHref(category.section, section.id, article.slug);
-                      const isActive = pathname === href;
-                      return (
-                        <li key={article.slug}>
-                          <Link
-                            href={href}
-                            className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
-                              isActive
-                                ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
-                                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-                            }`}
-                          >
-                            {article.title}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
+              {(category.sections || []).map((section) => {
+                const sectionKey = getSectionKey(category.section, section.id);
+                const isExpanded = expandedSections.has(sectionKey);
+                return (
+                  <div key={section.id} className="mb-3">
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(sectionKey)}
+                      className="mb-1.5 flex w-full items-center gap-1.5 rounded-full bg-zinc-200 px-2.5 py-0.5 text-left text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                    >
+                      <span
+                        className={`shrink-0 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                      >
+                        ▶
+                      </span>
+                      {section.title}
+                    </button>
+                    {isExpanded && (
+                      <ul className="space-y-0.5">
+                        {(section.articles || []).map((article) => {
+                          const href = getHref(category.section, section.id, article.slug);
+                          const isActive = pathname === href;
+                          return (
+                            <li key={article.slug}>
+                              <Link
+                                href={href}
+                                className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
+                                  isActive
+                                    ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
+                                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                                }`}
+                              >
+                                {article.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </nav>
@@ -104,6 +152,10 @@ export function Sidebar({ categorySection }: SidebarProps) {
 export function SidebarAll() {
   const pathname = usePathname();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(() => {
+    const current = getCurrentSectionFromPath(pathname);
+    return current ? new Set([current]) : new Set();
+  });
 
   useEffect(() => {
     async function loadCategories() {
@@ -113,43 +165,78 @@ export function SidebarAll() {
     loadCategories();
   }, []);
 
+  useEffect(() => {
+    const current = getCurrentSectionFromPath(pathname);
+    setExpandedSections(current ? new Set([current]) : new Set());
+  }, [pathname]);
+
+  const toggleSection = (key: string) => {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
   return (
     <aside className="w-64 shrink-0 border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
       <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto py-4 pl-4 pr-2">
         <DailyBibleVerse />
         <nav className="space-y-4">
-          {categories.map((category) => (
-            <div key={category.id}>
+          {categories.map((category, index) => (
+            <div
+              key={category.id}
+              className={index > 0 ? "border-t border-zinc-200 pt-4 dark:border-zinc-700" : ""}
+            >
               <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 {category.title}
               </p>
-              {(category.sections || []).map((section) => (
-                <div key={section.id} className="mb-3">
-                  <p className="mb-1 px-2 text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                    {section.title}
-                  </p>
-                  <ul className="space-y-0.5">
-                    {(section.articles || []).map((article) => {
-                      const href = getHref(category.section, section.id, article.slug);
-                      const isActive = pathname === href;
-                      return (
-                        <li key={article.slug}>
-                          <Link
-                            href={href}
-                            className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
-                              isActive
-                                ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
-                                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-                            }`}
-                          >
-                            {article.title}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
+              {(category.sections || []).map((section) => {
+                const sectionKey = getSectionKey(category.section, section.id);
+                const isExpanded = expandedSections.has(sectionKey);
+                return (
+                  <div key={section.id} className="mb-3">
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(sectionKey)}
+                      className="mb-1.5 flex w-full items-center gap-1.5 rounded-full bg-zinc-200 px-2.5 py-0.5 text-left text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                    >
+                      <span
+                        className={`shrink-0 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                      >
+                        ▶
+                      </span>
+                      {section.title}
+                    </button>
+                    {isExpanded && (
+                      <ul className="space-y-0.5">
+                        {(section.articles || []).map((article) => {
+                          const href = getHref(category.section, section.id, article.slug);
+                          const isActive = pathname === href;
+                          return (
+                            <li key={article.slug}>
+                              <Link
+                                href={href}
+                                className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
+                                  isActive
+                                    ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
+                                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                                }`}
+                              >
+                                {article.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </nav>
