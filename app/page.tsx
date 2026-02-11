@@ -44,24 +44,31 @@ export default async function Home() {
             <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Articles
             </h2>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-3 space-y-4">
               {categories.map((cat) => (
                 <li key={cat.id}>
-                  <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                  <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                     {cat.title}
                   </span>
-                  <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {cat.articles?.map((a) => (
-                      <li key={a.slug}>
-                        <Link
-                          href={`/${a.section}/${a.slug}`}
-                          className="hover:underline hover:text-zinc-900 dark:hover:text-zinc-50"
-                        >
-                          {a.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  {(cat.sections || []).map((section) => (
+                    <div key={section.id} className="mt-2">
+                      <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                        {section.title}
+                      </span>
+                      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                        {(section.articles || []).map((a) => (
+                          <li key={a.slug}>
+                            <Link
+                              href={`/${cat.section}/${section.id}/${a.slug}`}
+                              className="hover:underline hover:text-zinc-900 dark:hover:text-zinc-50"
+                            >
+                              {a.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </li>
               ))}
             </ul>
