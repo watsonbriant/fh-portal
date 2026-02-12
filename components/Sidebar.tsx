@@ -89,7 +89,7 @@ export function Sidebar({ categorySection }: SidebarProps) {
   };
 
   const asideClass =
-    "flex w-64 flex-col overflow-hidden border-r border-zinc-200 " +
+    "flex w-64 flex-col overflow-hidden border-r border-zinc-700 " +
     (isMobile
       ? `fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 ease-out bg-white dark:bg-zinc-900 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
       : "shrink-0 bg-zinc-50/50 dark:bg-zinc-900/50");
@@ -222,7 +222,7 @@ export function SidebarAll() {
   };
 
   const asideClass =
-    "flex w-64 flex-col overflow-hidden border-r border-zinc-200 " +
+    "flex w-64 flex-col overflow-hidden border-r border-zinc-700 " +
     (isMobile
       ? `fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 ease-out bg-white dark:bg-zinc-900 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
       : "shrink-0 bg-zinc-50/50 dark:bg-zinc-900/50");
