@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Authentication
+
+The app requires sign-in to view. Users can register with an email ending in `@freedomhouse.cc` (or the allowed exception). Credentials are stored in `z_p_users` (Supabase).
+
+- **Login:** `/login`
+- **Register:** `/register` (restricted to @freedomhouse.cc and one allowed exception)
+
+Set in `.env.local` (see `.env.example`):
+
+- `JWT_SECRET` – used to sign session cookies; use a strong secret in production
+
+Auth uses RLS on `z_p_users`: only allowed emails can be inserted, and login is done via a `z_p_verify_login` function (no direct read of password hashes).
+
 ## Getting Started
 
 First, run the development server:
