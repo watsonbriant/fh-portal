@@ -131,7 +131,8 @@ export function SearchModal() {
           </svg>
           <input
             ref={inputRef}
-            type="search"
+            type="text"
+            role="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search articles…"
@@ -145,6 +146,32 @@ export function SearchModal() {
                 : undefined
             }
           />
+          {query.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                inputRef.current?.focus();
+              }}
+              className="shrink-0 rounded p-1 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+              aria-label="Clear search"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
           <kbd className="hidden rounded border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 sm:inline-block">
             ESC
           </kbd>
