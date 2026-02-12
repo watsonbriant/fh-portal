@@ -1,16 +1,11 @@
-import Link from "next/link";
-import { EasternDateAndTime } from "@/components/EasternDateAndTime";
+import { HomeComponents } from "@/components/HomeComponents";
 import { PortalLayout } from "@/components/PortalLayout";
 import { SidebarAll } from "@/components/Sidebar";
-import { getNavigationItems } from "@/lib/database";
 
 export default async function Home() {
-  const navItems = await getNavigationItems();
-  const sectionNavItems = navItems.filter((item) => item.href !== "/");
-
   return (
     <PortalLayout sidebar={<SidebarAll />}>
-      <div className="mx-auto max-w-6xl px-6 py-10">
+      <div className="mx-auto max-w-3xl px-6 py-10">
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           Freedom House Portal
         </h1>
@@ -18,11 +13,11 @@ export default async function Home() {
           Welcome to the staff and contractor reference guide.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <EasternDateAndTime />
+        <div className="mt-10 flex flex-col items-center">
+          <HomeComponents />
 
           <section
-            className="overflow-hidden rounded-lg"
+            className="mt-10 w-full overflow-hidden rounded-lg"
             style={{
               position: "relative",
               width: "100%",
@@ -53,59 +48,6 @@ export default async function Home() {
             />
           </section>
         </div>
-
-        <section className="mt-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Browse
-            </h2>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {sectionNavItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {/* Articles section - commented out for now, can re-add later */}
-          {/* <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Articles
-            </h2>
-            <ul className="mt-3 space-y-4">
-              {categories.map((cat) => (
-                <li key={cat.id}>
-                  <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                    {cat.title}
-                  </span>
-                  {(cat.sections || []).map((section) => (
-                    <div key={section.id} className="mt-2">
-                      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                        {section.title}
-                      </span>
-                      <ul className="mt-0.5 flex flex-wrap gap-x-4 gap-y-[1px] text-sm text-zinc-600 dark:text-zinc-400">
-                        {(section.articles || []).map((a) => (
-                          <li key={a.slug}>
-                            <Link
-                              href={`/${cat.section}/${section.id}/${a.slug}`}
-                              className="hover:underline hover:text-zinc-900 dark:hover:text-zinc-50"
-                            >
-                              {a.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </li>
-              ))}
-            </ul>
-          </section> */}
       </div>
     </PortalLayout>
   );
