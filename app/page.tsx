@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { PortalLayout } from "@/components/PortalLayout";
 import { SidebarAll } from "@/components/Sidebar";
-import { getAllCategories, getNavigationItems } from "@/lib/database";
+import { getNavigationItems } from "@/lib/database";
 
 export default async function Home() {
-  const [categories, navItems] = await Promise.all([
-    getAllCategories(),
-    getNavigationItems(),
-  ]);
+  const navItems = await getNavigationItems();
 
   const sectionNavItems = navItems.filter((item) => item.href !== "/");
 
@@ -40,7 +37,8 @@ export default async function Home() {
             </ul>
           </section>
 
-          <section>
+          {/* Articles section - commented out for now, can re-add later */}
+          {/* <section>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Articles
             </h2>
@@ -72,7 +70,7 @@ export default async function Home() {
                 </li>
               ))}
             </ul>
-          </section>
+          </section> */}
         </div>
       </div>
     </PortalLayout>
