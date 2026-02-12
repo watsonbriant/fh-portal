@@ -48,11 +48,11 @@ export default function LoginPage() {
           <Image
             src="/Logo.jpg"
             alt="Freedom House"
-            width={40}
-            height={40}
+            width={64}
+            height={64}
             className="rounded-full object-contain"
           />
-          <span>Portal</span>
+          <span className="text-3xl">Portal</span>
         </Link>
         <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
