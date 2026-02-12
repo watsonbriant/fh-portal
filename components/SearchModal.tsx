@@ -108,7 +108,7 @@ export function SearchModal() {
         onClick={() => setOpen(false)}
       />
       <div
-        className="fixed left-1/2 top-[20%] z-50 w-full max-w-xl -translate-x-1/2 rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+        className="fixed left-4 right-4 top-[20%] z-50 mx-auto max-w-xl rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900 sm:left-1/2 sm:right-auto sm:-translate-x-1/2"
         role="dialog"
         aria-modal="true"
         aria-label="Search articles"

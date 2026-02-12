@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useLayout } from "@/contexts/LayoutContext";
 import { getAllCategories, getCategoriesForSection, type Category, type NavSection } from "@/lib/database";
 
 function getHref(categorySection: string, sectionId: string, slug: string) {
@@ -55,6 +56,7 @@ interface SidebarProps {
 
 export function Sidebar({ categorySection }: SidebarProps) {
   const pathname = usePathname();
+  const { isMobile, sidebarOpen, setSidebarOpen, navItems } = useLayout();
   const [categories, setCategories] = useState<Category[]>([]);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(() => {
     const current = getCurrentSectionFromPath(pathname);
@@ -86,9 +88,38 @@ export function Sidebar({ categorySection }: SidebarProps) {
     });
   };
 
+  const asideClass =
+    "flex w-64 flex-col overflow-hidden border-r border-zinc-200 " +
+    (isMobile
+      ? `fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 ease-out bg-white dark:bg-zinc-900 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
+      : "shrink-0 bg-zinc-50/50 dark:bg-zinc-900/50");
+
   return (
-    <aside className="flex w-64 shrink-0 flex-col overflow-hidden border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
-      <div className="min-h-0 flex-1 overflow-y-auto py-4 pl-4 pr-2">
+    <aside className={asideClass}>
+      <div className="min-h-0 flex-1 overflow-y-auto py-4 px-2">
+        {isMobile && (
+          <nav className="mb-4 space-y-0.5 border-b border-zinc-200 pb-4 dark:border-zinc-700">
+            {navItems
+              .filter((item) => item.href === "/")
+              .map((item) => {
+                const isActive = pathname === "/";
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`block rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
+                        : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+          </nav>
+        )}
         <DailyBibleVerse />
         <nav className="space-y-4 border-t border-zinc-200 pt-4 dark:border-zinc-700">
           {categories.map((category, index) => (
@@ -122,7 +153,7 @@ export function Sidebar({ categorySection }: SidebarProps) {
                       }`}
                     >
                       <div className="min-h-0 overflow-hidden">
-                        <ul className="space-y-0.5 pt-1">
+                        <ul className="space-y-0.5 py-2">
                           {(section.articles || []).map((article) => {
                             const href = getHref(category.section, section.id, article.slug);
                             const isActive = pathname === href;
@@ -130,6 +161,7 @@ export function Sidebar({ categorySection }: SidebarProps) {
                               <li key={article.slug}>
                                 <Link
                                   href={href}
+                                  onClick={() => isMobile && setSidebarOpen(false)}
                                   className={`block rounded-md px-2 py-1 text-sm leading-[0.875rem] transition-colors ${
                                     isActive
                                       ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
@@ -157,6 +189,7 @@ export function Sidebar({ categorySection }: SidebarProps) {
 
 export function SidebarAll() {
   const pathname = usePathname();
+  const { isMobile, sidebarOpen, setSidebarOpen, navItems } = useLayout();
   const [categories, setCategories] = useState<Category[]>([]);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(() => {
     const current = getCurrentSectionFromPath(pathname);
@@ -188,9 +221,38 @@ export function SidebarAll() {
     });
   };
 
+  const asideClass =
+    "flex w-64 flex-col overflow-hidden border-r border-zinc-200 " +
+    (isMobile
+      ? `fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 ease-out bg-white dark:bg-zinc-900 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
+      : "shrink-0 bg-zinc-50/50 dark:bg-zinc-900/50");
+
   return (
-    <aside className="flex w-64 shrink-0 flex-col overflow-hidden border-r border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
-      <div className="min-h-0 flex-1 overflow-y-auto py-4 pl-4 pr-2">
+    <aside className={asideClass}>
+      <div className="min-h-0 flex-1 overflow-y-auto py-4 px-2">
+        {isMobile && (
+          <nav className="mb-4 space-y-0.5 border-b border-zinc-200 pb-4 dark:border-zinc-700">
+            {navItems
+              .filter((item) => item.href === "/")
+              .map((item) => {
+                const isActive = pathname === "/";
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`block rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
+                        : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+          </nav>
+        )}
         <DailyBibleVerse />
         <nav className="space-y-4 border-t border-zinc-200 pt-4 dark:border-zinc-700">
           {categories.map((category, index) => (
@@ -224,7 +286,7 @@ export function SidebarAll() {
                       }`}
                     >
                       <div className="min-h-0 overflow-hidden">
-                        <ul className="space-y-0.5 pt-1">
+                        <ul className="space-y-0.5 py-2">
                           {(section.articles || []).map((article) => {
                             const href = getHref(category.section, section.id, article.slug);
                             const isActive = pathname === href;
@@ -232,6 +294,7 @@ export function SidebarAll() {
                               <li key={article.slug}>
                                 <Link
                                   href={href}
+                                  onClick={() => isMobile && setSidebarOpen(false)}
                                   className={`block rounded-md px-2 py-0.5 text-sm transition-colors ${
                                     isActive
                                       ? "bg-zinc-200 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50"
