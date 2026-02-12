@@ -58,9 +58,6 @@ export default function LoginPage() {
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
             Sign in
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Use your FreedomHouse.cc email address.
-          </p>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {error && (
               <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">

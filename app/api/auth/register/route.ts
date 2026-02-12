@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     if (!isEmailAllowedForRegistration(email)) {
       return NextResponse.json(
-        { error: "Registration is only allowed for FreedomHouse.cc email addresses." },
+        { error: "Error creating account.  Please contact Jordan Price at jprice@freedomhouse.cc." },
         { status: 403 }
       );
     }
