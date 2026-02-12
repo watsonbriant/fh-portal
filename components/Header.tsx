@@ -59,7 +59,7 @@ export function Header() {
       <button
         type="button"
         onClick={() => setSearchOpen(true)}
-        className="flex items-center gap-2 bg-zinc-800 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-500 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-300"
+        className="flex items-center gap-2 bg-zinc-800 rounded-md border border-zinc-200 p-1.5 text-sm text-zinc-500 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-300"
         aria-label="Search articles (Cmd+K)"
       >
         <svg
