@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSearch } from "@/contexts/SearchContext";
 import { getNavigationItems, type NavigationItem } from "@/lib/database";
 
 export function Header() {
   const pathname = usePathname();
+  const { setOpen: setSearchOpen } = useSearch();
   const [navItems, setNavItems] = useState<NavigationItem[]>([]);
 
   useEffect(() => {
@@ -54,6 +56,31 @@ export function Header() {
           );
         })}
       </nav>
+      <button
+        type="button"
+        onClick={() => setSearchOpen(true)}
+        className="flex items-center gap-2 bg-zinc-800 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-500 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-300"
+        aria-label="Search articles (Cmd+K)"
+      >
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <span className="hidden sm:inline">Search</span>
+        <kbd className="hidden rounded border border-zinc-300 bg-zinc-100 px-1.5 py-0.5 text-xs dark:border-zinc-600 dark:bg-zinc-900 lg:inline-block">
+          ⌘K
+        </kbd>
+      </button>
     </header>
   );
 }
