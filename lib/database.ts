@@ -228,3 +228,37 @@ export async function getSectionWithCategory(sectionId: string) {
 
   return section;
 }
+
+export interface ArticleNavLink {
+  href: string;
+  title: string;
+  sectionTitle: string;
+}
+
+// Get previous and next article in global order: category sort_order, section sort_order, article sort_order
+export async function getArticlePrevNext(
+  categorySection: string,
+  sectionId: string,
+  slug: string
+): Promise<{ prev: ArticleNavLink | null; next: ArticleNavLink | null }> {
+  const categories = await getAllCategories();
+  const flat: ArticleNavLink[] = [];
+  for (const category of categories) {
+    for (const sec of category.sections || []) {
+      for (const article of sec.articles || []) {
+        flat.push({
+          href: `/${category.section}/${sec.id}/${article.slug}`,
+          title: article.title,
+          sectionTitle: sec.title,
+        });
+      }
+    }
+  }
+  const currentHref = `/${categorySection}/${sectionId}/${slug}`;
+  const idx = flat.findIndex((item) => item.href === currentHref);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? flat[idx - 1] : null,
+    next: idx < flat.length - 1 ? flat[idx + 1] : null,
+  };
+}
